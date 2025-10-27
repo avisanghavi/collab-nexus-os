@@ -1,6 +1,6 @@
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pb-[50rem]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pb-[35rem]">
       {/* Gradient background */}
       <div className="absolute inset-0 gradient-hero opacity-50" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 gradient-glow animate-glow-pulse" />
