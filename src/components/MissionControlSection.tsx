@@ -63,7 +63,7 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[45rem]">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[55rem]">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       
@@ -112,11 +112,11 @@ const MissionControlSection = () => {
           })}
 
 
-          {/* Dashboard content - fades in as logos organize */}
+          {/* Dashboard content - only fades in after logos have organized */}
           <motion.div
             className="h-full"
             style={{
-              opacity: useTransform(scrollYProgress, [0.4, 0.8], [0, 1]),
+              opacity: useTransform(scrollYProgress, [0.5, 0.9], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
