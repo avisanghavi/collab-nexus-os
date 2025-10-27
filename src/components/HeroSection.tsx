@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import { useEffect, useState } from "react";
-import { 
-  Mail, 
-  Calendar, 
-  MessageSquare, 
-  GitBranch, 
-  FileText, 
-  Database,
-  Sparkles,
-  Inbox
-} from "lucide-react";
+
+// Import all logos
+import gmailLogo from "@/assets/logos/gmail.png";
+import outlookLogo from "@/assets/logos/outlook.png";
+import googleCalendarLogo from "@/assets/logos/google-calendar.png";
+import teamsLogo from "@/assets/logos/teams.png";
+import slackLogo from "@/assets/logos/slack.png";
+import jiraLogo from "@/assets/logos/jira.png";
+import confluenceLogo from "@/assets/logos/confluence.png";
+import githubLogo from "@/assets/logos/github.png";
+import hubspotLogo from "@/assets/logos/hubspot.png";
+import openaiLogo from "@/assets/logos/openai.png";
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -32,17 +34,17 @@ const HeroSection = () => {
   const convergenceProgress = Math.min(scrollY / 400, 1);
 
   const logos = [
-    { Icon: Mail, name: "Gmail", color: "text-red-500", x: -30, y: -20 },
-    { Icon: Inbox, name: "Outlook", color: "text-blue-600", x: 30, y: -30 },
-    { Icon: Calendar, name: "Google Calendar", color: "text-blue-500", x: -40, y: 10 },
-    { Icon: Calendar, name: "Outlook Calendar", color: "text-blue-700", x: 40, y: 15 },
-    { Icon: MessageSquare, name: "Teams", color: "text-purple-600", x: -35, y: 30 },
-    { Icon: MessageSquare, name: "Slack", color: "text-purple-500", x: 25, y: -15 },
-    { Icon: FileText, name: "Jira", color: "text-blue-600", x: -25, y: -35 },
-    { Icon: FileText, name: "Confluence", color: "text-blue-500", x: 35, y: 25 },
-    { Icon: GitBranch, name: "GitHub", color: "text-gray-700", x: -20, y: 25 },
-    { Icon: Database, name: "HubSpot", color: "text-orange-500", x: 20, y: -25 },
-    { Icon: Sparkles, name: "OpenAI", color: "text-emerald-500", x: 0, y: -40 },
+    { src: gmailLogo, name: "Gmail", x: -30, y: -20 },
+    { src: outlookLogo, name: "Outlook", x: 30, y: -30 },
+    { src: googleCalendarLogo, name: "Google Calendar", x: -40, y: 10 },
+    { src: googleCalendarLogo, name: "Outlook Calendar", x: 40, y: 15 },
+    { src: teamsLogo, name: "Teams", x: -35, y: 30 },
+    { src: slackLogo, name: "Slack", x: 25, y: -15 },
+    { src: jiraLogo, name: "Jira", x: -25, y: -35 },
+    { src: confluenceLogo, name: "Confluence", x: 35, y: 25 },
+    { src: githubLogo, name: "GitHub", x: -20, y: 25 },
+    { src: hubspotLogo, name: "HubSpot", x: 20, y: -25 },
+    { src: openaiLogo, name: "OpenAI", x: 0, y: -40 },
   ];
 
   return (
@@ -69,13 +71,12 @@ const HeroSection = () => {
                 opacity: opacity,
               }}
             >
-              <div
-                className={`p-4 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg hover-lift ${logo.color}`}
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                }}
-              >
-                <logo.Icon className="w-8 h-8" />
+              <div className="p-4 rounded-2xl bg-white shadow-lg hover-lift">
+                <img 
+                  src={logo.src} 
+                  alt={logo.name}
+                  className="w-12 h-12 object-contain"
+                />
               </div>
             </div>
           );
