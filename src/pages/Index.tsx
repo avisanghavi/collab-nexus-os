@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import ProblemSection from "@/components/ProblemSection";
+import OneLayerSection from "@/components/OneLayerSection";
 import MissionControlSection from "@/components/MissionControlSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import ResultsSection from "@/components/ResultsSection";
@@ -12,6 +13,7 @@ const Index = () => {
       <HeroSection />
       <MissionControlSection />
       <ProblemSection />
+      <OneLayerSection />
       <HowItWorksSection />
       <ResultsSection />
       <ROICalculator />
