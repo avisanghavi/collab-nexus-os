@@ -20,7 +20,7 @@ const MissionControlSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start end", "center center"]
   });
 
   // Scattered initial positions for logos (circular-ish scattered pattern)
@@ -63,7 +63,7 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[35rem]">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[45rem]">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       
@@ -78,10 +78,11 @@ const MissionControlSection = () => {
             const finalX = (index - 4.5) * 68;
             const finalY = -180; // Position at top of dashboard
             
-            const logoX = useTransform(scrollYProgress, [0, 0.5], [scattered.x, finalX]);
-            const logoY = useTransform(scrollYProgress, [0, 0.5], [scattered.y, finalY]);
-            const logoRotate = useTransform(scrollYProgress, [0, 0.5], [scattered.rotate, 0]);
-            const logoScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.85]);
+            const logoX = useTransform(scrollYProgress, [0, 0.7], [scattered.x, finalX]);
+            const logoY = useTransform(scrollYProgress, [0, 0.7], [scattered.y, finalY]);
+            const logoRotate = useTransform(scrollYProgress, [0, 0.7], [scattered.rotate, 0]);
+            const logoScale = useTransform(scrollYProgress, [0, 0.7], [1, 0.85]);
+
 
             return (
               <motion.div
@@ -115,7 +116,7 @@ const MissionControlSection = () => {
           <motion.div
             className="h-full"
             style={{
-              opacity: useTransform(scrollYProgress, [0.3, 0.6], [0, 1]),
+              opacity: useTransform(scrollYProgress, [0.4, 0.8], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
