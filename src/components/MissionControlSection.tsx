@@ -115,8 +115,9 @@ const MissionControlSection = () => {
           {/* Dashboard content - only fades in after logos have organized */}
           <motion.div
             className="h-full"
+            initial={{ opacity: 0 }}
             style={{
-              opacity: useTransform(scrollYProgress, [0.5, 0.9], [0, 1]),
+              opacity: useTransform(scrollYProgress, [0.6, 0.9], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
