@@ -30,8 +30,9 @@ const HeroSection = () => {
     document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Calculate convergence based on scroll
-  const convergenceProgress = Math.min(scrollY / 400, 1);
+  // Calculate funnel effect based on scroll (logos move down and converge)
+  const funnelProgress = Math.min(scrollY / 600, 1);
+  const shouldFunnel = scrollY > 200;
 
   const logos = [
     { src: gmailLogo, name: "Gmail", x: -30, y: -20 },
@@ -53,21 +54,28 @@ const HeroSection = () => {
       <div className="absolute inset-0 gradient-hero opacity-50" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 gradient-glow animate-glow-pulse" />
       
-      {/* Floating logos that converge on scroll */}
+      {/* Floating logos that funnel down into dashboard */}
       <div className="absolute inset-0 flex items-center justify-center">
         {logos.map((logo, index) => {
           const initialX = logo.x * 8;
           const initialY = logo.y * 8;
-          const currentX = initialX * (1 - convergenceProgress);
-          const currentY = initialY * (1 - convergenceProgress);
-          const opacity = convergenceProgress > 0.8 ? 1 - (convergenceProgress - 0.8) * 5 : 0.6 + convergenceProgress * 0.4;
+          
+          // Funnel effect: converge horizontally and move down
+          const targetY = 600 + (index * 40); // Stagger vertically as they funnel
+          const currentX = shouldFunnel ? initialX * (1 - funnelProgress) : initialX;
+          const currentY = shouldFunnel 
+            ? initialY + (targetY - initialY) * funnelProgress
+            : initialY;
+          
+          // Fade out as they exit the hero section
+          const opacity = funnelProgress > 0.7 ? 1 - (funnelProgress - 0.7) * 3.3 : 0.6 + funnelProgress * 0.4;
 
           return (
             <div
               key={index}
               className="absolute transition-all duration-700 ease-out"
               style={{
-                transform: `translate(${currentX}px, ${currentY}px) scale(${1 - convergenceProgress * 0.3})`,
+                transform: `translate(${currentX}px, ${currentY}px) scale(${1 - funnelProgress * 0.2})`,
                 opacity: opacity,
               }}
             >
@@ -82,15 +90,18 @@ const HeroSection = () => {
           );
         })}
 
-        {/* Central orb that appears as logos converge */}
-        <div
-          className="absolute w-32 h-32 rounded-full gradient-primary transition-all duration-700"
-          style={{
-            opacity: convergenceProgress * 0.8,
-            transform: `scale(${convergenceProgress})`,
-            boxShadow: `0 0 ${convergenceProgress * 100}px hsl(var(--primary-glow) / ${convergenceProgress * 0.6})`,
-          }}
-        />
+        {/* Funnel visualization */}
+        {shouldFunnel && (
+          <div 
+            className="absolute top-0 left-1/2 -translate-x-1/2 transition-all duration-700"
+            style={{
+              opacity: funnelProgress * 0.3,
+              transform: `translateX(-50%) scaleY(${funnelProgress})`,
+            }}
+          >
+            <div className="w-px h-[800px] bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
+          </div>
+        )}
       </div>
 
       <div className="container relative z-10 px-6 py-32">

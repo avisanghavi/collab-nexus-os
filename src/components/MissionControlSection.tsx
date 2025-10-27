@@ -1,8 +1,53 @@
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, GitBranch, Mail, Calendar, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// Import logos for the connected dashboard
+import gmailLogo from "@/assets/logos/gmail.png";
+import outlookLogo from "@/assets/logos/outlook.png";
+import googleCalendarLogo from "@/assets/logos/google-calendar.png";
+import teamsLogo from "@/assets/logos/teams.png";
+import slackLogo from "@/assets/logos/slack.png";
+import jiraLogo from "@/assets/logos/jira.png";
+import confluenceLogo from "@/assets/logos/confluence.png";
+import githubLogo from "@/assets/logos/github.png";
+import hubspotLogo from "@/assets/logos/hubspot.png";
+import openaiLogo from "@/assets/logos/openai.png";
+
 const MissionControlSection = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const connectedLogos = [
+    { src: gmailLogo, name: "Gmail" },
+    { src: outlookLogo, name: "Outlook" },
+    { src: googleCalendarLogo, name: "Calendar" },
+    { src: teamsLogo, name: "Teams" },
+    { src: slackLogo, name: "Slack" },
+    { src: jiraLogo, name: "Jira" },
+    { src: confluenceLogo, name: "Confluence" },
+    { src: githubLogo, name: "GitHub" },
+    { src: hubspotLogo, name: "HubSpot" },
+    { src: openaiLogo, name: "OpenAI" },
+  ];
   const tasks = [
     { id: 1, title: "Fix authentication bug", status: "In Progress", source: "JIRA" },
     { id: 2, title: "Review PR #234", status: "Pending", source: "GitHub" },
@@ -16,10 +61,35 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section id="mission-control" className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} id="mission-control" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
       
-      <div className="container px-6 relative z-10">
+      {/* Connected logos visualization at top */}
+      <div className="absolute top-0 left-0 right-0 h-32 flex items-center justify-center gap-4 overflow-hidden">
+        <div className={`flex items-center gap-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
+          {connectedLogos.map((logo, index) => (
+            <div
+              key={index}
+              className="relative"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="w-10 h-10 rounded-lg bg-white shadow-md p-1.5 animate-fade-in">
+                <img 
+                  src={logo.src} 
+                  alt={logo.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              {/* Connection lines */}
+              {index < connectedLogos.length - 1 && (
+                <div className="absolute top-1/2 -right-4 w-4 h-px bg-primary/30" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="container px-6 relative z-10 pt-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="px-4 py-2 text-sm">
