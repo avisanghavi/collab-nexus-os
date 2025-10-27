@@ -63,62 +63,38 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[40rem]">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[35rem]">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       
       <ContainerScroll
-        titleComponent={
-          <div className="text-center space-y-4">
-            <Badge variant="outline" className="px-4 py-2 text-sm">
-              Mission Control Layer
-            </Badge>
-          </div>
-        }
+        titleComponent={<div className="h-0"></div>}
       >
         <div className="h-full w-full bg-card p-6 relative">
-          {/* Scattered logos - visible at start, fade out as content appears */}
-          <motion.div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{
-              opacity: useTransform(scrollYProgress, [0, 0.5], [1, 0]),
-            }}
-          >
-            {connectedLogos.map((logo, index) => {
-              const scattered = scatteredPositions[index];
-              return (
-                <motion.div
-                  key={`scattered-${index}`}
-                  className="absolute"
-                  style={{
-                    x: scattered.x,
-                    y: scattered.y,
-                    rotate: scattered.rotate,
-                  }}
-                >
-                  <div className="w-14 h-14 rounded-xl bg-white shadow-lg p-2.5">
-                    <img 
-                      src={logo.src} 
-                      alt={logo.name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+          {/* Scattered logos that organize into the strip */}
+          {connectedLogos.map((logo, index) => {
+            const scattered = scatteredPositions[index];
+            // Final position in organized strip at top
+            const finalX = (index - 4.5) * 68;
+            const finalY = -180; // Position at top of dashboard
+            
+            const logoX = useTransform(scrollYProgress, [0, 0.5], [scattered.x, finalX]);
+            const logoY = useTransform(scrollYProgress, [0, 0.5], [scattered.y, finalY]);
+            const logoRotate = useTransform(scrollYProgress, [0, 0.5], [scattered.rotate, 0]);
+            const logoScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.85]);
 
-          {/* Organized content - fades in as you scroll */}
-          <motion.div
-            className="h-full"
-            style={{
-              opacity: useTransform(scrollYProgress, [0.3, 0.6], [0, 1]),
-            }}
-          >
-            {/* Connected logos strip at top */}
-            <div className="flex items-center justify-center gap-3 mb-6 pb-6 border-b border-border">
-              {connectedLogos.map((logo, index) => (
-                <div key={index} className="w-12 h-12 rounded-xl bg-white shadow-md p-2 relative group transition-transform hover:scale-110">
+            return (
+              <motion.div
+                key={`logo-${index}`}
+                className="absolute top-1/2 left-1/2 z-20"
+                style={{
+                  x: logoX,
+                  y: logoY,
+                  rotate: logoRotate,
+                  scale: logoScale,
+                }}
+              >
+                <div className="w-14 h-14 rounded-xl bg-white shadow-lg p-2.5 relative group transition-transform hover:scale-110">
                   <img 
                     src={logo.src} 
                     alt={logo.name}
@@ -130,8 +106,21 @@ const MissionControlSection = () => {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </motion.div>
+            );
+          })}
+
+
+          {/* Dashboard content - fades in as logos organize */}
+          <motion.div
+            className="h-full"
+            style={{
+              opacity: useTransform(scrollYProgress, [0.3, 0.6], [0, 1]),
+            }}
+          >
+            {/* Organized logos strip placeholder at top - hidden, just for spacing */}
+            <div className="h-20 mb-6 border-b border-border bg-muted/30" />
+
 
             {/* Dashboard grid */}
             <div className="grid lg:grid-cols-3 gap-6">
