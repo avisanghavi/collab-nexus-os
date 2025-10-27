@@ -63,7 +63,7 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-hidden bg-gradient-to-b from-muted/30 to-background -mt-96 pt-96">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[50vh] pt-[50vh]">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       
@@ -79,17 +79,16 @@ const MissionControlSection = () => {
         <div className="h-full w-full bg-card p-6 relative">
           {/* Scattered logos - visible at start, fade out as content appears */}
           <motion.div 
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
             style={{
-              opacity: useTransform(scrollYProgress, [0, 0.3], [1, 0]),
-              pointerEvents: 'none'
+              opacity: useTransform(scrollYProgress, [0, 0.5], [1, 0]),
             }}
           >
             {connectedLogos.map((logo, index) => {
               const scattered = scatteredPositions[index];
               return (
                 <motion.div
-                  key={index}
+                  key={`scattered-${index}`}
                   className="absolute"
                   style={{
                     x: scattered.x,
@@ -97,7 +96,7 @@ const MissionControlSection = () => {
                     rotate: scattered.rotate,
                   }}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-white shadow-md p-2.5">
+                  <div className="w-14 h-14 rounded-xl bg-white shadow-lg p-2.5">
                     <img 
                       src={logo.src} 
                       alt={logo.name}
@@ -113,7 +112,7 @@ const MissionControlSection = () => {
           <motion.div
             className="h-full"
             style={{
-              opacity: useTransform(scrollYProgress, [0.2, 0.5], [0, 1]),
+              opacity: useTransform(scrollYProgress, [0.3, 0.6], [0, 1]),
             }}
           >
             {/* Connected logos strip at top */}
