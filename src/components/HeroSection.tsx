@@ -61,21 +61,21 @@ const HeroSection = () => {
           const initialY = logo.y * 8;
           
           // Funnel effect: converge horizontally and move down
-          const targetY = 600 + (index * 40); // Stagger vertically as they funnel
-          const currentX = shouldFunnel ? initialX * (1 - funnelProgress) : initialX;
+          const targetY = 700 + (index * 30); // Stagger vertically as they funnel
+          const currentX = shouldFunnel ? initialX * (1 - funnelProgress * 1.2) : initialX;
           const currentY = shouldFunnel 
             ? initialY + (targetY - initialY) * funnelProgress
             : initialY;
           
           // Fade out as they exit the hero section
-          const opacity = funnelProgress > 0.7 ? 1 - (funnelProgress - 0.7) * 3.3 : 0.6 + funnelProgress * 0.4;
+          const opacity = funnelProgress > 0.75 ? 1 - (funnelProgress - 0.75) * 4 : 0.6 + funnelProgress * 0.4;
 
           return (
             <div
               key={index}
-              className="absolute transition-all duration-700 ease-out"
+              className="absolute transition-all duration-700 ease-in-out"
               style={{
-                transform: `translate(${currentX}px, ${currentY}px) scale(${1 - funnelProgress * 0.2})`,
+                transform: `translate(${currentX}px, ${currentY}px) scale(${1 - funnelProgress * 0.3})`,
                 opacity: opacity,
               }}
             >
@@ -90,17 +90,56 @@ const HeroSection = () => {
           );
         })}
 
-        {/* Funnel visualization */}
+        {/* Funnel visualization - cone shape */}
         {shouldFunnel && (
-          <div 
-            className="absolute top-0 left-1/2 -translate-x-1/2 transition-all duration-700"
-            style={{
-              opacity: funnelProgress * 0.3,
-              transform: `translateX(-50%) scaleY(${funnelProgress})`,
-            }}
-          >
-            <div className="w-px h-[800px] bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
-          </div>
+          <>
+            {/* Funnel shape using gradients */}
+            <div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 transition-all duration-1000 pointer-events-none"
+              style={{
+                opacity: Math.min(funnelProgress * 1.5, 0.4),
+                transform: `translateX(-50%) scaleY(${funnelProgress * 1.2})`,
+                transformOrigin: 'top center',
+              }}
+            >
+              {/* Wide top of funnel */}
+              <div className="relative w-[600px] h-[800px]">
+                {/* Left side of funnel */}
+                <div 
+                  className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-primary/40 via-primary/20 to-transparent"
+                  style={{
+                    transform: 'rotate(-10deg)',
+                    transformOrigin: 'top left',
+                  }}
+                />
+                {/* Right side of funnel */}
+                <div 
+                  className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-primary/40 via-primary/20 to-transparent"
+                  style={{
+                    transform: 'rotate(10deg)',
+                    transformOrigin: 'top right',
+                  }}
+                />
+                {/* Center line */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-transparent via-primary/30 to-primary/50" />
+                
+                {/* Glow effect in funnel */}
+                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+              </div>
+            </div>
+
+            {/* Processing indicator text */}
+            <div 
+              className="absolute bottom-32 left-1/2 -translate-x-1/2 text-center transition-all duration-700"
+              style={{
+                opacity: funnelProgress > 0.3 ? Math.min((funnelProgress - 0.3) * 2, 1) : 0,
+              }}
+            >
+              <div className="text-sm font-medium text-primary/70 animate-pulse">
+                Processing integrations...
+              </div>
+            </div>
+          </>
         )}
       </div>
 

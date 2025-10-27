@@ -61,35 +61,63 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} id="mission-control" className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
+    <section ref={sectionRef} id="mission-control" className="py-32 relative overflow-hidden bg-gradient-to-b from-muted/30 to-background">
+      {/* Top border with glow effect */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
       
       {/* Connected logos visualization at top */}
-      <div className="absolute top-0 left-0 right-0 h-32 flex items-center justify-center gap-4 overflow-hidden">
-        <div className={`flex items-center gap-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
+      <div className="absolute top-12 left-0 right-0 flex items-center justify-center">
+        <div className={`flex items-center gap-3 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
           {connectedLogos.map((logo, index) => (
             <div
               key={index}
               className="relative"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              style={{ 
+                animationDelay: `${index * 0.08}s`,
+                animation: isVisible ? 'fade-in 0.6s ease-out forwards' : 'none',
+              }}
             >
-              <div className="w-10 h-10 rounded-lg bg-white shadow-md p-1.5 animate-fade-in">
+              <div className="w-12 h-12 rounded-xl bg-white shadow-elegant p-2 relative group">
                 <img 
                   src={logo.src} 
                   alt={logo.name}
                   className="w-full h-full object-contain"
                 />
+                {/* Tooltip */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="text-xs font-medium text-muted-foreground whitespace-nowrap bg-card px-2 py-1 rounded shadow-md">
+                    {logo.name}
+                  </div>
+                </div>
               </div>
-              {/* Connection lines */}
+              {/* Connection lines between logos */}
               {index < connectedLogos.length - 1 && (
-                <div className="absolute top-1/2 -right-4 w-4 h-px bg-primary/30" />
+                <div className="absolute top-1/2 -right-3 w-3 h-px bg-gradient-to-r from-primary/40 to-primary/20" />
               )}
             </div>
           ))}
         </div>
       </div>
+
+      {/* Connecting lines from logos to dashboard */}
+      <div className={`absolute top-24 left-0 right-0 h-20 flex items-start justify-center transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="relative w-full max-w-4xl">
+          {/* Multiple lines converging to center */}
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-0 h-20 w-px bg-gradient-to-b from-primary/30 to-transparent"
+              style={{
+                left: `${20 + i * 15}%`,
+                animationDelay: `${i * 0.1}s`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
       
-      <div className="container px-6 relative z-10 pt-20">
+      <div className="container px-6 relative z-10 pt-32">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <Badge variant="outline" className="px-4 py-2 text-sm">
