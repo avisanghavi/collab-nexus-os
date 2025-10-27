@@ -117,7 +117,7 @@ const MissionControlSection = () => {
             className="h-full"
             initial={{ opacity: 0 }}
             style={{
-              opacity: useTransform(scrollYProgress, [0.6, 0.9], [0, 1]),
+              opacity: useTransform(scrollYProgress, [0.85, 0.98], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
