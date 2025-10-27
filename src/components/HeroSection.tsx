@@ -1,11 +1,49 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
-import heroImage from "@/assets/hero-collaboration.jpg";
+import { useEffect, useState } from "react";
+import { 
+  Mail, 
+  Calendar, 
+  MessageSquare, 
+  GitBranch, 
+  FileText, 
+  Database,
+  Sparkles,
+  Inbox
+} from "lucide-react";
 
 const HeroSection = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const scrollToDemo = () => {
-    document.getElementById('mission-control')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("mission-control")?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Calculate convergence based on scroll
+  const convergenceProgress = Math.min(scrollY / 400, 1);
+
+  const logos = [
+    { Icon: Mail, name: "Gmail", color: "text-red-500", x: -30, y: -20 },
+    { Icon: Inbox, name: "Outlook", color: "text-blue-600", x: 30, y: -30 },
+    { Icon: Calendar, name: "Google Calendar", color: "text-blue-500", x: -40, y: 10 },
+    { Icon: Calendar, name: "Outlook Calendar", color: "text-blue-700", x: 40, y: 15 },
+    { Icon: MessageSquare, name: "Teams", color: "text-purple-600", x: -35, y: 30 },
+    { Icon: MessageSquare, name: "Slack", color: "text-purple-500", x: 25, y: -15 },
+    { Icon: FileText, name: "Jira", color: "text-blue-600", x: -25, y: -35 },
+    { Icon: FileText, name: "Confluence", color: "text-blue-500", x: 35, y: 25 },
+    { Icon: GitBranch, name: "GitHub", color: "text-gray-700", x: -20, y: 25 },
+    { Icon: Database, name: "HubSpot", color: "text-orange-500", x: 20, y: -25 },
+    { Icon: Sparkles, name: "OpenAI", color: "text-emerald-500", x: 0, y: -40 },
+  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -13,12 +51,44 @@ const HeroSection = () => {
       <div className="absolute inset-0 gradient-hero opacity-50" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 gradient-glow animate-glow-pulse" />
       
-      {/* Hero image background */}
-      <div className="absolute inset-0 opacity-30">
-        <img 
-          src={heroImage} 
-          alt="Collaboration visualization" 
-          className="w-full h-full object-cover"
+      {/* Floating logos that converge on scroll */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        {logos.map((logo, index) => {
+          const initialX = logo.x * 8;
+          const initialY = logo.y * 8;
+          const currentX = initialX * (1 - convergenceProgress);
+          const currentY = initialY * (1 - convergenceProgress);
+          const opacity = convergenceProgress > 0.8 ? 1 - (convergenceProgress - 0.8) * 5 : 0.6 + convergenceProgress * 0.4;
+
+          return (
+            <div
+              key={index}
+              className="absolute transition-all duration-700 ease-out"
+              style={{
+                transform: `translate(${currentX}px, ${currentY}px) scale(${1 - convergenceProgress * 0.3})`,
+                opacity: opacity,
+              }}
+            >
+              <div
+                className={`p-4 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg hover-lift ${logo.color}`}
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                }}
+              >
+                <logo.Icon className="w-8 h-8" />
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Central orb that appears as logos converge */}
+        <div
+          className="absolute w-32 h-32 rounded-full gradient-primary transition-all duration-700"
+          style={{
+            opacity: convergenceProgress * 0.8,
+            transform: `scale(${convergenceProgress})`,
+            boxShadow: `0 0 ${convergenceProgress * 100}px hsl(var(--primary-glow) / ${convergenceProgress * 0.6})`,
+          }}
         />
       </div>
 
