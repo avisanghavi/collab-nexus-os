@@ -3,8 +3,8 @@ import ProblemSection from "@/components/ProblemSection";
 import MissionControlSection from "@/components/MissionControlSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import ResultsSection from "@/components/ResultsSection";
-import TrustSection from "@/components/TrustSection";
-import CTASection from "@/components/CTASection";
+import ROICalculator from "@/components/ROICalculator";
+import FinalCTA from "@/components/FinalCTA";
 
 const Index = () => {
   return (
@@ -14,8 +14,8 @@ const Index = () => {
       <ProblemSection />
       <HowItWorksSection />
       <ResultsSection />
-      <TrustSection />
-      <CTASection />
+      <ROICalculator />
+      <FinalCTA />
     </main>
   );
 };
