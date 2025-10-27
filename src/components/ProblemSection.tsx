@@ -1,27 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import { AlertCircle, Clock, MessagesSquare } from "lucide-react";
+import { useRef } from "react";
 
 const ProblemSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const stats = [
     {
-      icon: AlertCircle,
       value: "73%",
       label: "of projects fail due to poor communication between teams",
-      color: "text-primary",
     },
     {
-      icon: Clock,
       value: "58%",
       label: "of work time spent searching for information across tools",
-      color: "text-secondary",
     },
     {
-      icon: MessagesSquare,
       value: "100+",
       label: "tools used by the average enterprise team",
-      color: "text-accent",
     },
   ];
 
@@ -48,9 +41,6 @@ const ProblemSection = () => {
                 className="text-center space-y-4 p-8 rounded-2xl bg-muted/30 border border-border hover-lift"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={`inline-flex p-4 rounded-xl bg-background ${stat.color}`}>
-                  <stat.icon className="w-8 h-8" />
-                </div>
                 <div>
                   <div className="text-4xl font-bold mb-2">{stat.value}</div>
                   <p className="text-muted-foreground leading-relaxed">{stat.label}</p>

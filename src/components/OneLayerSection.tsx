@@ -1,31 +1,22 @@
-import { Layers, Zap, Link2, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const OneLayerSection = () => {
   const features = [
     {
-      icon: Layers,
       title: "Universal Layer",
       description: "We don't replace your tools—we unify them into one intelligent workspace",
-      gradient: "from-primary to-primary-glow",
     },
     {
-      icon: Zap,
       title: "Real-Time Sync",
       description: "Every update across all platforms reflects instantly in your Mission Control",
-      gradient: "from-secondary to-secondary-glow",
     },
     {
-      icon: Link2,
       title: "Smart Connections",
       description: "AI automatically links tasks, PRs, docs, and conversations into actionable context",
-      gradient: "from-accent to-accent/70",
     },
     {
-      icon: Shield,
       title: "Enterprise Security",
       description: "SOC 2 Type II, GDPR compliant, with granular access controls",
-      gradient: "from-primary via-secondary to-accent",
     },
   ];
 
@@ -54,13 +45,7 @@ const OneLayerSection = () => {
                 className="p-8 hover-lift group relative overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Background gradient on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                
                 <div className="relative z-10 space-y-4">
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient}`}>
-                    <feature.icon className="w-6 h-6 text-white" />
-                  </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">

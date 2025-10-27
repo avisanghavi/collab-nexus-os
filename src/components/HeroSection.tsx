@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Import all logos
@@ -164,10 +163,8 @@ const HeroSection = () => {
               className="group"
             >
               See it in Action
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button variant="heroOutline" size="xl">
-              <Play className="mr-1" />
               Book a Demo
             </Button>
           </div>

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calculator } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const ROICalculator = () => {
@@ -46,10 +45,6 @@ const ROICalculator = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center space-y-6 mb-12 animate-fade-in-up">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
-              <Calculator className="h-4 w-4 mr-2 text-primary" />
-              <span className="text-sm font-medium text-primary">ROI Calculator</span>
-            </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground">
               Calculate Your{" "}
               <span className="bg-gradient-accent bg-clip-text text-transparent">Savings</span>

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar } from "lucide-react";
 
 const FinalCTA = () => {
   return (
@@ -30,7 +29,6 @@ const FinalCTA = () => {
                   size="lg"
                   className="text-base px-8 py-6 bg-foreground text-background hover:bg-foreground/90 transition-colors shadow-lg"
                 >
-                  <Calendar className="mr-2 h-5 w-5" />
                   Book a Personalized Demo
                 </Button>
                 <Button
@@ -43,21 +41,14 @@ const FinalCTA = () => {
                   className="text-base px-8 py-6 bg-background/90 backdrop-blur-sm border-2 border-foreground/20 hover:bg-background hover:border-foreground/40 transition-colors"
                 >
                   Calculate Your ROI
-                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
 
               {/* Trust Signals */}
               <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-foreground/70">
-                <div className="flex items-center gap-2">
-                  ✓ No credit card required
-                </div>
-                <div className="flex items-center gap-2">
-                  ✓ 14-day pilot program
-                </div>
-                <div className="flex items-center gap-2">
-                  ✓ White-glove onboarding
-                </div>
+                <div>No credit card required</div>
+                <div>14-day pilot program</div>
+                <div>White-glove onboarding</div>
               </div>
             </div>
           </div>

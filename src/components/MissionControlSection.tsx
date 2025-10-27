@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, GitBranch, Mail, Calendar, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -139,8 +138,7 @@ const MissionControlSection = () => {
               {/* Left: My Tasks */}
               <Card className="p-6 space-y-4 border-primary/20">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                  <h3 className="font-semibold">
                     My Tasks
                   </h3>
                   <Badge variant="secondary" className="text-xs">Live</Badge>
@@ -175,7 +173,6 @@ const MissionControlSection = () => {
               {/* Center: Metrics */}
               <Card className="p-6 space-y-4 border-secondary/20">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-secondary" />
                   <h3 className="font-semibold">Real-Time Metrics</h3>
                 </div>
                 <div className="space-y-4">
@@ -207,30 +204,21 @@ const MissionControlSection = () => {
                 </div>
                 <div className="space-y-3">
                   <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
-                    <div className="flex items-start gap-3">
-                      <Mail className="w-4 h-4 text-accent mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium mb-1">Unread in Outlook</p>
-                        <p className="text-xs text-muted-foreground">3 emails need review</p>
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium mb-1">Unread in Outlook</p>
+                      <p className="text-xs text-muted-foreground">3 emails need review</p>
                     </div>
                   </div>
                   <div className="p-4 rounded-lg bg-secondary/10 border border-secondary/20">
-                    <div className="flex items-start gap-3">
-                      <Calendar className="w-4 h-4 text-secondary mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium mb-1">Schedule sync</p>
-                        <p className="text-xs text-muted-foreground">Team standup in 15 min</p>
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium mb-1">Schedule sync</p>
+                      <p className="text-xs text-muted-foreground">Team standup in 15 min</p>
                     </div>
                   </div>
                   <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-                    <div className="flex items-start gap-3">
-                      <GitBranch className="w-4 h-4 text-primary mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium mb-1">Code review ready</p>
-                        <p className="text-xs text-muted-foreground">2 PRs awaiting approval</p>
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium mb-1">Code review ready</p>
+                      <p className="text-xs text-muted-foreground">2 PRs awaiting approval</p>
                     </div>
                   </div>
                 </div>
