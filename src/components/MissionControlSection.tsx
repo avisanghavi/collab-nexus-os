@@ -49,7 +49,8 @@ const MissionControlSection = () => {
 
   // Stable starting point and derived motion values
   const start0 = base ?? scrollYProgress.get();
-  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.85, start0 + 0.98], [0, 1]);
+  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.7, start0 + 0.85], [0, 1]);
+  const dashboardY = useTransform(scrollYProgress, [start0 + 0.7, start0 + 1.2], [0, -200]);
   const inView = useInView(containerRef, { amount: 0.6 });
 
   // Scattered initial positions for logos (circular-ish scattered pattern)
@@ -145,9 +146,10 @@ const MissionControlSection = () => {
           {/* Dashboard content - only fades in after logos have organized */}
           <motion.div
             className="h-full"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 0 }}
             style={{
-              opacity: useTransform(scrollYProgress, [(base ?? scrollYProgress.get()) + 0.85, (base ?? scrollYProgress.get()) + 0.98], [0, 1]),
+              opacity: dashboardOpacity,
+              y: dashboardY,
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
