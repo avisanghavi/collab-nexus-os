@@ -23,6 +23,13 @@ const MissionControlSection = () => {
     offset: ["start end", "center center"]
   });
 
+  // Anchor to initial scroll position so initial state is always scattered
+  const baseProgressRef = useRef<number | null>(null);
+  if (baseProgressRef.current === null) {
+    baseProgressRef.current = scrollYProgress.get();
+  }
+  const base = baseProgressRef.current ?? 0;
+
   // Scattered initial positions for logos (circular-ish scattered pattern)
   const scatteredPositions = [
     { x: -120, y: -40, rotate: -15 },
@@ -63,7 +70,7 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[50rem]">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[50rem]" aria-label="Mission Control: Unified Dashboard with Connected Apps">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       
@@ -78,10 +85,10 @@ const MissionControlSection = () => {
             const finalX = (index - 4.5) * 68;
             const finalY = -180; // Position at top of dashboard
             
-            const logoX = useTransform(scrollYProgress, [0, 0.7], [scattered.x, finalX]);
-            const logoY = useTransform(scrollYProgress, [0, 0.7], [scattered.y, finalY]);
-            const logoRotate = useTransform(scrollYProgress, [0, 0.7], [scattered.rotate, 0]);
-            const logoScale = useTransform(scrollYProgress, [0, 0.7], [1, 0.85]);
+            const logoX = useTransform(scrollYProgress, [base, base + 0.7], [scattered.x, finalX]);
+            const logoY = useTransform(scrollYProgress, [base, base + 0.7], [scattered.y, finalY]);
+            const logoRotate = useTransform(scrollYProgress, [base, base + 0.7], [scattered.rotate, 0]);
+            const logoScale = useTransform(scrollYProgress, [base, base + 0.7], [1, 0.85]);
 
 
             return (
@@ -117,7 +124,7 @@ const MissionControlSection = () => {
             className="h-full"
             initial={{ opacity: 0 }}
             style={{
-              opacity: useTransform(scrollYProgress, [0.85, 0.98], [0, 1]),
+              opacity: useTransform(scrollYProgress, [base + 0.85, base + 0.98], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
