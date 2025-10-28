@@ -1,4 +1,4 @@
-import { DashboardScroll } from "@/components/ui/dashboard-scroll";
+import { UnifiedDashboardMacbook } from "@/components/ui/unified-dashboard-macbook";
 
 // Import real logos for the connected dashboard
 import gmailLogo from "@/assets/logos/gmail.svg";
@@ -13,18 +13,18 @@ import hubspotLogo from "@/assets/logos/hubspot.png";
 import openaiLogo from "@/assets/logos/openai.svg";
 
 const MissionControlSectionNew = () => {
-  // Scattered positions on the dashboard - spread across the panel
+  // Scattered positions on the dashboard - widely spread for dramatic effect
   const scatteredPositions = [
-    { x: -280, y: -120, rotate: -15 },    // Gmail - top left
-    { x: -140, y: -80, rotate: 10 },      // Outlook - top left-center
-    { x: 0, y: -100, rotate: -8 },        // Calendar - top center
-    { x: 140, y: -90, rotate: 12 },       // Teams - top right-center
-    { x: 280, y: -110, rotate: -10 },     // Slack - top right
-    { x: -320, y: 40, rotate: 8 },        // Jira - bottom left
-    { x: -160, y: 60, rotate: -12 },      // Confluence - bottom left-center
-    { x: 0, y: 50, rotate: 15 },          // GitHub - bottom center
-    { x: 160, y: 45, rotate: -18 },       // HubSpot - bottom right-center
-    { x: 320, y: 55, rotate: 10 },        // OpenAI - bottom right
+    { x: -350, y: -150, rotate: -25 },    // Gmail - far top left
+    { x: -180, y: -120, rotate: 18 },     // Outlook - top left
+    { x: 20, y: -140, rotate: -15 },      // Calendar - top center
+    { x: 200, y: -110, rotate: 22 },      // Teams - top right
+    { x: 380, y: -130, rotate: -18 },     // Slack - far top right
+    { x: -460, y: -100, rotate: 15 },      // Jira - bottom left
+    { x: -280, y: -30, rotate: -20 },     // Confluence - bottom left-center
+    { x: -30, y: -20, rotate: 25 },        // GitHub - bottom center
+    { x: 180, y: -10, rotate: -22 },      // HubSpot - bottom right-center
+    { x: 350, y: -25, rotate: 17 },       // OpenAI - far bottom right
   ];
 
   const connectedLogos = [
@@ -43,7 +43,7 @@ const MissionControlSectionNew = () => {
   return (
     <section
       id="mission-control"
-      className="relative bg-gradient-to-b from-background to-muted/30 overflow-hidden"
+      className="relative -mt-[35rem] overflow-visible"
       aria-label="Mission Control: Unified Dashboard with Connected Apps"
     >
       {/* Top border with glow effect */}
@@ -53,7 +53,7 @@ const MissionControlSectionNew = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       
-      <DashboardScroll
+      <UnifiedDashboardMacbook
         logos={connectedLogos}
         scatteredPositions={scatteredPositions}
         macbookSrc="/dashboard.png"
