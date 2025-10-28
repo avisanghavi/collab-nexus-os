@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ContainerScroll } from "@/components/ui/container-scroll";
-import { useScroll, useTransform, motion } from "framer-motion";
+import { useScroll, useTransform, motion, useInView } from "framer-motion";
 
 // Import logos for the connected dashboard
 import gmailLogo from "@/assets/logos/gmail.png";
@@ -46,6 +46,11 @@ const MissionControlSection = () => {
       try { unsub(); } catch {}
     };
   }, [base, scrollYProgress]);
+
+  // Stable starting point and derived motion values
+  const start0 = base ?? scrollYProgress.get();
+  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.85, start0 + 0.98], [0, 1]);
+  const inView = useInView(containerRef, { amount: 0.6 });
 
   // Scattered initial positions for logos (circular-ish scattered pattern)
   const scatteredPositions = [
@@ -102,10 +107,11 @@ const MissionControlSection = () => {
             const finalX = (index - 4.5) * 68;
             const finalY = -180; // Position at top of dashboard
             
-            const logoX = base === null ? scattered.x : useTransform(scrollYProgress, [base, base + 0.7], [scattered.x, finalX]);
-            const logoY = base === null ? scattered.y : useTransform(scrollYProgress, [base, base + 0.7], [scattered.y, finalY]);
-            const logoRotate = base === null ? scattered.rotate : useTransform(scrollYProgress, [base, base + 0.7], [scattered.rotate, 0]);
-            const logoScale = base === null ? 1 : useTransform(scrollYProgress, [base, base + 0.7], [1, 0.85]);
+            const start = start0;
+            const logoX = useTransform(scrollYProgress, [start, start + 0.7], [scattered.x, finalX]);
+            const logoY = useTransform(scrollYProgress, [start, start + 0.7], [scattered.y, finalY]);
+            const logoRotate = useTransform(scrollYProgress, [start, start + 0.7], [scattered.rotate, 0]);
+            const logoScale = useTransform(scrollYProgress, [start, start + 0.7], [1, 0.85]);
 
 
             return (
@@ -141,7 +147,7 @@ const MissionControlSection = () => {
             className="h-full"
             initial={{ opacity: 0 }}
             style={{
-              opacity: base === null ? 0 : useTransform(scrollYProgress, [base + 0.85, base + 0.98], [0, 1]),
+              opacity: useTransform(scrollYProgress, [(base ?? scrollYProgress.get()) + 0.85, (base ?? scrollYProgress.get()) + 0.98], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
