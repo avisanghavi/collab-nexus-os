@@ -20,51 +20,45 @@ const MissionControlSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "end start"] // Animation uses full extended section height
   });
 
-  const [base, setBase] = useState<number | null>(null);
+  // Animation values - complete by 55% when dashboard is fully visible and settled
+  const logoProgress = useTransform(scrollYProgress, [0.05, 0.35], [0, 1]);
+  const dashboardOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
+  const dashboardY = useTransform(scrollYProgress, [0.2, 0.55], [400, 80]);
+  const inView = useInView(containerRef, { amount: 0.3 });
+
+  // SIMPLIFIED LOGGING - Track only at key milestones
   useEffect(() => {
-    if (base !== null) return;
-    const initial = scrollYProgress.get();
-    let initialized = false;
-    const unsub = scrollYProgress.on("change", (val) => {
-      if (!initialized) {
-        setBase(val);
-        initialized = true;
-        try { unsub(); } catch {}
+    let lastLoggedMilestone = -1;
+
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      const currentMilestone = Math.floor(latest * 10); // Log every 10%
+
+      if (currentMilestone !== lastLoggedMilestone) {
+        lastLoggedMilestone = currentMilestone;
+
+        const rect = containerRef.current?.getBoundingClientRect();
+        console.log(`📊 ${(latest * 100).toFixed(0)}% | Logo:${logoProgress.get().toFixed(2)} Opacity:${dashboardOpacity.get().toFixed(2)} Y:${dashboardY.get().toFixed(0)} | Top:${rect?.top.toFixed(0)} Bottom:${rect?.bottom.toFixed(0)} Height:${rect?.height.toFixed(0)}`);
       }
     });
-    requestAnimationFrame(() => {
-      if (!initialized) {
-        setBase(initial);
-        initialized = true;
-        try { unsub(); } catch {}
-      }
-    });
-    return () => {
-      try { unsub(); } catch {}
-    };
-  }, [base, scrollYProgress]);
 
-  // Stable starting point and derived motion values
-  const start0 = base ?? scrollYProgress.get();
-  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.6, start0 + 0.8], [0, 1]);
-  const dashboardY = useTransform(scrollYProgress, [start0 + 0.6, start0 + 1.5], [50, -400]);
-  const inView = useInView(containerRef, { amount: 0.6 });
+    return () => unsubscribe();
+  }, [scrollYProgress, logoProgress, dashboardOpacity, dashboardY]);
 
-  // Scattered initial positions for logos (circular-ish scattered pattern)
+  // Scattered initial positions - maximally spread to fill all available space
   const scatteredPositions = [
-    { x: -120, y: -40, rotate: -15 },
-    { x: 80, y: -80, rotate: 20 },
-    { x: -50, y: 20, rotate: 10 },
-    { x: 140, y: -20, rotate: -25 },
-    { x: -150, y: -90, rotate: 15 },
-    { x: 30, y: -120, rotate: -10 },
-    { x: -90, y: 60, rotate: 25 },
-    { x: 120, y: 40, rotate: -20 },
-    { x: -30, y: -100, rotate: 12 },
-    { x: 90, y: -50, rotate: -8 },
+    { x: -380, y: -180, rotate: -25 },  // Gmail - extreme left top
+    { x: -150, y: -240, rotate: 28 },   // Outlook - left top
+    { x: 80, y: -220, rotate: -18 },    // Calendar - center top
+    { x: 340, y: -160, rotate: 32 },    // Teams - extreme right top
+    { x: -340, y: 0, rotate: 20 },      // Slack - extreme left middle
+    { x: -80, y: -100, rotate: -24 },   // Jira - center left
+    { x: 180, y: -60, rotate: 22 },     // Confluence - center right
+    { x: 400, y: 20, rotate: -20 },     // GitHub - extreme right middle
+    { x: -260, y: 180, rotate: 26 },    // HubSpot - left bottom
+    { x: 240, y: 160, rotate: -28 },    // OpenAI - right bottom
   ];
 
   const connectedLogos = [
@@ -93,10 +87,10 @@ const MissionControlSection = () => {
   ];
 
   return (
-    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[50rem]" aria-label="Mission Control: Unified Dashboard with Connected Apps">
+    <section ref={containerRef} id="mission-control" className="relative overflow-visible bg-gradient-to-b from-muted/30 to-background -mt-[50rem] pt-48 min-h-[150vh]" aria-label="Mission Control: Unified Dashboard with Connected Apps">
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      
+
       <ContainerScroll
         titleComponent={<div className="h-0"></div>}
       >
@@ -108,11 +102,10 @@ const MissionControlSection = () => {
             const finalX = (index - 4.5) * 68;
             const finalY = -180; // Position at top of dashboard
             
-            const start = start0;
-            const logoX = useTransform(scrollYProgress, [start, start + 0.7], [scattered.x, finalX]);
-            const logoY = useTransform(scrollYProgress, [start, start + 0.7], [scattered.y, finalY]);
-            const logoRotate = useTransform(scrollYProgress, [start, start + 0.7], [scattered.rotate, 0]);
-            const logoScale = useTransform(scrollYProgress, [start, start + 0.7], [1, 0.85]);
+            const logoX = useTransform(logoProgress, [0, 1], [scattered.x, finalX]);
+            const logoY = useTransform(logoProgress, [0, 1], [scattered.y, finalY]);
+            const logoRotate = useTransform(logoProgress, [0, 1], [scattered.rotate, 0]);
+            const logoScale = useTransform(logoProgress, [0, 1], [1, 0.95]);
 
 
             return (
@@ -146,43 +139,43 @@ const MissionControlSection = () => {
           {/* Dashboard content - only fades in after logos have organized */}
           <motion.div
             className="h-full"
-            initial={{ opacity: 0, y: 0 }}
+            initial={{ opacity: 0, y: 400 }}
             style={{
               opacity: dashboardOpacity,
               y: dashboardY,
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
-            <div className="h-20 mb-6 border-b border-border bg-muted/30" />
+            <div className="h-16 mb-8 border-b border-border/50" />
 
 
-            {/* Dashboard grid */}
-            <div className="grid lg:grid-cols-3 gap-6">
+            {/* Dashboard grid - Enhanced spacing and design */}
+            <div className="grid lg:grid-cols-3 gap-8 px-2">
               {/* Left: My Tasks */}
-              <Card className="p-6 space-y-4 border-primary/20">
+              <Card className="p-7 space-y-5 border-primary/20 bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">My Tasks</h3>
-                  <Badge variant="secondary" className="text-xs">Live</Badge>
+                  <h3 className="text-lg font-bold">My Tasks</h3>
+                  <Badge variant="secondary" className="text-xs font-semibold px-3 py-1">Live</Badge>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3.5">
                   {tasks.map((task) => (
                     <div
                       key={task.id}
-                      className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors group"
+                      className="p-4 rounded-xl bg-muted/50 hover:bg-muted/70 transition-all hover:scale-[1.02] group border border-transparent hover:border-primary/10"
                     >
-                      <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{task.title}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-xs">
+                          <p className="text-sm font-semibold truncate mb-2">{task.title}</p>
+                          <div className="flex items-center gap-2.5 mt-1.5">
+                            <Badge variant="outline" className="text-xs font-medium px-2.5 py-0.5">
                               {task.source}
                             </Badge>
-                            <span className="text-xs text-muted-foreground">{task.status}</span>
+                            <span className="text-xs text-muted-foreground font-medium">{task.status}</span>
                           </div>
                         </div>
-                        <div className={`w-2 h-2 rounded-full mt-1.5 ${
-                          task.status === "Complete" ? "bg-primary" :
-                          task.status === "In Progress" ? "bg-secondary animate-pulse" :
+                        <div className={`w-2.5 h-2.5 rounded-full mt-1 ${
+                          task.status === "Complete" ? "bg-primary shadow-lg shadow-primary/50" :
+                          task.status === "In Progress" ? "bg-secondary animate-pulse shadow-lg shadow-secondary/50" :
                           "bg-muted-foreground"
                         }`} />
                       </div>
@@ -192,23 +185,23 @@ const MissionControlSection = () => {
               </Card>
 
               {/* Center: Metrics */}
-              <Card className="p-6 space-y-4 border-secondary/20">
+              <Card className="p-7 space-y-5 border-secondary/20 bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold">Real-Time Metrics</h3>
+                  <h3 className="text-lg font-bold">Real-Time Metrics</h3>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {metrics.map((metric, index) => (
-                    <div key={index} className="space-y-2">
+                    <div key={index} className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">{metric.label}</span>
-                        <span className="text-xs font-medium text-primary">{metric.trend}</span>
+                        <span className="text-sm font-medium text-muted-foreground">{metric.label}</span>
+                        <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full">{metric.trend}</span>
                       </div>
                       <div className="flex items-end gap-2">
-                        <span className="text-2xl font-bold">{metric.value}</span>
+                        <span className="text-3xl font-bold tracking-tight">{metric.value}</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2.5 bg-muted/70 rounded-full overflow-hidden shadow-inner">
                         <div 
-                          className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-1000"
+                          className="h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full transition-all duration-1000 shadow-lg"
                           style={{ width: metric.value.includes('%') ? metric.value : '70%' }}
                         />
                       </div>
@@ -218,28 +211,28 @@ const MissionControlSection = () => {
               </Card>
 
               {/* Right: Smart Suggestions */}
-              <Card className="p-6 space-y-4 border-accent/20">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  <h3 className="font-semibold">AI Suggestions</h3>
+              <Card className="p-7 space-y-5 border-accent/20 bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-xl transition-shadow">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse shadow-lg shadow-accent/50" />
+                  <h3 className="text-lg font-bold">AI Suggestions</h3>
                 </div>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
+                <div className="space-y-3.5">
+                  <div className="p-4 rounded-xl bg-accent/10 border border-accent/20 hover:bg-accent/15 hover:border-accent/30 transition-all hover:scale-[1.02] cursor-pointer">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium mb-1">Unread in Outlook</p>
-                      <p className="text-xs text-muted-foreground">3 emails need review</p>
+                      <p className="text-sm font-semibold mb-1.5">Unread in Outlook</p>
+                      <p className="text-xs text-muted-foreground font-medium">3 emails need review</p>
                     </div>
                   </div>
-                  <div className="p-4 rounded-lg bg-secondary/10 border border-secondary/20">
+                  <div className="p-4 rounded-xl bg-secondary/10 border border-secondary/20 hover:bg-secondary/15 hover:border-secondary/30 transition-all hover:scale-[1.02] cursor-pointer">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium mb-1">Schedule sync</p>
-                      <p className="text-xs text-muted-foreground">Team standup in 15 min</p>
+                      <p className="text-sm font-semibold mb-1.5">Schedule sync</p>
+                      <p className="text-xs text-muted-foreground font-medium">Team standup in 15 min</p>
                     </div>
                   </div>
-                  <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
+                  <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all hover:scale-[1.02] cursor-pointer">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium mb-1">Code review ready</p>
-                      <p className="text-xs text-muted-foreground">2 PRs awaiting approval</p>
+                      <p className="text-sm font-semibold mb-1.5">Code review ready</p>
+                      <p className="text-xs text-muted-foreground font-medium">2 PRs awaiting approval</p>
                     </div>
                   </div>
                 </div>

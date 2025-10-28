@@ -6,17 +6,16 @@ const HeroSection = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 gradient-glow animate-glow-pulse" />
 
 
-      <div className="container relative z-10 px-6 py-32">
-        <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance">
-            The Universal
-            <span className="block mt-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Collaboration Layer
+      <div className="container relative z-10 px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in mt-32">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
+            <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              Productivity Reimagined
             </span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto text-balance">
-            Real-time clarity. Unified velocity. Seamless connection.
+            Context united. Clarity unlocked. Progress accelerated.
           </p>
         </div>
       </div>
