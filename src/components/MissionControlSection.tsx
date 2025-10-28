@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ContainerScroll } from "@/components/ui/container-scroll";
@@ -23,12 +23,29 @@ const MissionControlSection = () => {
     offset: ["start end", "center center"]
   });
 
-  // Anchor to initial scroll position so initial state is always scattered
-  const baseProgressRef = useRef<number | null>(null);
-  if (baseProgressRef.current === null) {
-    baseProgressRef.current = scrollYProgress.get();
-  }
-  const base = baseProgressRef.current ?? 0;
+  const [base, setBase] = useState<number | null>(null);
+  useEffect(() => {
+    if (base !== null) return;
+    const initial = scrollYProgress.get();
+    let initialized = false;
+    const unsub = scrollYProgress.on("change", (val) => {
+      if (!initialized) {
+        setBase(val);
+        initialized = true;
+        try { unsub(); } catch {}
+      }
+    });
+    requestAnimationFrame(() => {
+      if (!initialized) {
+        setBase(initial);
+        initialized = true;
+        try { unsub(); } catch {}
+      }
+    });
+    return () => {
+      try { unsub(); } catch {}
+    };
+  }, [base, scrollYProgress]);
 
   // Scattered initial positions for logos (circular-ish scattered pattern)
   const scatteredPositions = [
@@ -85,10 +102,10 @@ const MissionControlSection = () => {
             const finalX = (index - 4.5) * 68;
             const finalY = -180; // Position at top of dashboard
             
-            const logoX = useTransform(scrollYProgress, [base, base + 0.7], [scattered.x, finalX]);
-            const logoY = useTransform(scrollYProgress, [base, base + 0.7], [scattered.y, finalY]);
-            const logoRotate = useTransform(scrollYProgress, [base, base + 0.7], [scattered.rotate, 0]);
-            const logoScale = useTransform(scrollYProgress, [base, base + 0.7], [1, 0.85]);
+            const logoX = base === null ? scattered.x : useTransform(scrollYProgress, [base, base + 0.7], [scattered.x, finalX]);
+            const logoY = base === null ? scattered.y : useTransform(scrollYProgress, [base, base + 0.7], [scattered.y, finalY]);
+            const logoRotate = base === null ? scattered.rotate : useTransform(scrollYProgress, [base, base + 0.7], [scattered.rotate, 0]);
+            const logoScale = base === null ? 1 : useTransform(scrollYProgress, [base, base + 0.7], [1, 0.85]);
 
 
             return (
@@ -105,7 +122,7 @@ const MissionControlSection = () => {
                 <div className="w-14 h-14 rounded-xl bg-white shadow-lg p-2.5 relative group transition-transform hover:scale-110">
                   <img 
                     src={logo.src} 
-                    alt={logo.name}
+                    alt={`${logo.name} logo - integrated app`}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
@@ -124,7 +141,7 @@ const MissionControlSection = () => {
             className="h-full"
             initial={{ opacity: 0 }}
             style={{
-              opacity: useTransform(scrollYProgress, [base + 0.85, base + 0.98], [0, 1]),
+              opacity: base === null ? 0 : useTransform(scrollYProgress, [base + 0.85, base + 0.98], [0, 1]),
             }}
           >
             {/* Organized logos strip placeholder at top - hidden, just for spacing */}
