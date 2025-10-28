@@ -48,16 +48,34 @@ const MissionControlSectionNew = () => {
     >
       {/* Top border with glow effect */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      
+
       {/* Background gradient orbs for depth */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-      
+
       <UnifiedDashboardMacbook
         logos={connectedLogos}
         scatteredPositions={scatteredPositions}
-        macbookSrc="/dashboard.png"
+        macbookSrc="/dashbaord2.png"
       />
+
+      {/* Footer */}
+      <footer className="relative bg-white border-t border-gray-200 py-8">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <div>
+              <span className="font-semibold text-gray-900">Jarvis</span>
+              <span className="mx-2">·</span>
+              <span></span>
+            </div>
+            <div className="flex gap-8">
+              <a href="#" className="hover:text-gray-900 transition-colors">Privacy</a>
+              <a href="#" className="hover:text-gray-900 transition-colors">Terms</a>
+              <a href="#" className="hover:text-gray-900 transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </section>
   );
 };
