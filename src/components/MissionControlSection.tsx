@@ -49,8 +49,8 @@ const MissionControlSection = () => {
 
   // Stable starting point and derived motion values
   const start0 = base ?? scrollYProgress.get();
-  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.7, start0 + 0.85], [0, 1]);
-  const dashboardY = useTransform(scrollYProgress, [start0 + 0.7, start0 + 1.2], [0, -200]);
+  const dashboardOpacity = useTransform(scrollYProgress, [start0 + 0.6, start0 + 0.8], [0, 1]);
+  const dashboardY = useTransform(scrollYProgress, [start0 + 0.6, start0 + 1.5], [50, -400]);
   const inView = useInView(containerRef, { amount: 0.6 });
 
   // Scattered initial positions for logos (circular-ish scattered pattern)
