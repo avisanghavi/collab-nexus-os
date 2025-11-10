@@ -12,7 +12,7 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
 
   useEffect(() => {
     const timeline = async () => {
-      // 1. Logo Reveal (0-1.5s) - Typing effect
+      // 1. Logo Reveal (0-1s) - Typing effect (faster)
       let currentIndex = 0;
       const typingInterval = setInterval(() => {
         if (currentIndex <= jarvisText.length) {
@@ -21,37 +21,37 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
         } else {
           clearInterval(typingInterval);
         }
-      }, 150);
+      }, 100); // Faster typing (was 150ms)
 
-      // 2. Pulse + Tagline (1.5-3s)
+      // 2. Pulse + Tagline (1-1.8s)
       setTimeout(() => {
         setShowTagline(true);
-      }, 1500);
+      }, 1000); // Faster (was 1500ms)
 
-      // 3. Loading Indicator (3-5s)
+      // 3. Loading Indicator (1.8-3s)
       setTimeout(() => {
         setShowProgress(true);
 
-        // Progress bar animation
+        // Progress bar animation (faster)
         const progressInterval = setInterval(() => {
           setProgress(prev => {
             if (prev >= 100) {
               clearInterval(progressInterval);
               return 100;
             }
-            return prev + 5;
+            return prev + 8; // Faster progress (was 5)
           });
-        }, 40);
+        }, 30); // Faster interval (was 40ms)
 
-      }, 3000);
+      }, 1800); // Faster (was 3000ms)
 
-      // 4. Fade Out (5-6s)
+      // 4. Fade Out (3-3.8s)
       setTimeout(() => {
         setFadeOut(true);
         setTimeout(() => {
           if (onFinish) onFinish();
-        }, 1000);
-      }, 5000);
+        }, 800); // Faster fade (was 1000ms)
+      }, 3000); // Much faster (was 5000ms)
     };
 
     timeline();
@@ -63,25 +63,34 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
       initial={{ opacity: 1 }}
       animate={{ opacity: fadeOut ? 0 : 1 }}
       transition={{ duration: 1 }}
+      style={{ 
+        WebkitBackfaceVisibility: 'hidden',
+        WebkitPerspective: 1000,
+        WebkitTransform: 'translate3d(0,0,0)',
+        transform: 'translate3d(0,0,0)'
+      }}
     >
       {/* Main Jarvis Logo */}
-      <div className="relative">
-        <motion.h1
-          className="text-6xl md:text-8xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-          animate={{
-            filter: showTagline ? [
-              "drop-shadow(0 0 20px rgba(147,51,234,0.3))",
-              "drop-shadow(0 0 40px rgba(147,51,234,0.5))",
-              "drop-shadow(0 0 20px rgba(147,51,234,0.3))"
-            ] : "drop-shadow(0 0 0px rgba(147,51,234,0))"
-          }}
-          transition={{
-            filter: {
+      <div className="relative px-4">
+        {/* Simplified glow background - no blur for Safari performance */}
+        {showTagline && (
+          <motion.div
+            className="absolute inset-0 -inset-x-8 -inset-y-4 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 rounded-3xl"
+            animate={{
+              opacity: [0.3, 0.6, 0.3],
+              scale: [0.98, 1.02, 0.98]
+            }}
+            transition={{
               duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
-            }
-          }}
+            }}
+          />
+        )}
+        
+        <motion.h1
+          className="text-7xl md:text-9xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 whitespace-nowrap relative z-10"
+          style={{ willChange: 'transform' }}
         >
           {typedText}
           {typedText.length < jarvisText.length && (
@@ -94,21 +103,6 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
             </motion.span>
           )}
         </motion.h1>
-
-        {/* Glow Effect */}
-        <motion.div
-          className="absolute inset-0 text-6xl md:text-8xl font-extrabold tracking-wide text-blue-600/10 blur-xl"
-          animate={{
-            opacity: showTagline ? [0.3, 0.7, 0.3] : 0
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          {typedText}
-        </motion.div>
       </div>
 
       {/* Tagline */}
@@ -119,7 +113,7 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-xl md:text-2xl text-gray-600 mt-6 font-light tracking-wide"
           >
-            The future of work.
+            Connecting Your Workspace.
           </motion.p>
         )}
       </AnimatePresence>
@@ -128,14 +122,16 @@ const LoadingScreen: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
       <AnimatePresence>
         {showProgress && (
           <motion.div
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={{ opacity: 1, scaleX: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="mt-8 w-80 max-w-[80vw] h-1 bg-gray-200 rounded-full overflow-hidden"
           >
-            <motion.div
-              className="h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
-              style={{ width: `${progress}%` }}
-              transition={{ duration: 0.1 }}
+            <div
+              className="h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-100 ease-linear"
+              style={{ 
+                width: `${progress}%`,
+                willChange: 'width'
+              }}
             />
           </motion.div>
         )}

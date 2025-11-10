@@ -60,18 +60,14 @@ const MissionControlSectionNew = () => {
       />
 
       {/* Footer */}
-      <footer className="relative bg-white border-t border-gray-200 py-8">
+      <footer className="relative bg-white border-t border-gray-200 py-4">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div>
-              <span className="font-semibold text-gray-900">Jarvis</span>
-              <span className="mx-2">·</span>
-              <span></span>
+              <span className="font-semibold text-gray-900">HeyJarvis</span>
             </div>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-gray-900 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Terms</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Contact</a>
+            <div>
+              <a href="#" className="hover:text-gray-900 transition-colors font-medium">Contact Us</a>
             </div>
           </div>
         </div>
