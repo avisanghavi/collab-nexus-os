@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Navbar1 } from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import MissionControlSectionNew from "@/components/MissionControlSectionNew";
+import SEOContent from "@/components/SEOContent";
 import LoadingScreen from "@/components/LoadingScreen";
 // import ProblemSection from "@/components/ProblemSection";
 // import OneLayerSection from "@/components/OneLayerSection";
@@ -35,6 +36,7 @@ const Index = () => {
       {hasLoaded && (
         <>
           <Navbar1 />
+          <SEOContent />
           <main className="min-h-screen">
             <HeroSection />
             <MissionControlSectionNew />

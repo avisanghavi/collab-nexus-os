@@ -6,7 +6,7 @@ const HeroSection = () => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 gradient-glow animate-glow-pulse" />
 
 
-      <div className="container relative z-10 px-6">
+      <div className="container relative z-10 px-6 mt-8">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
             <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">

@@ -2,11 +2,13 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import WaitlistModal from "./WaitlistModal"
 
 const Navbar1 = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isDemoMode, setIsDemoMode] = useState(false)
   const [demoState, setDemoState] = useState<'idle' | 'running' | 'completed'>('idle')
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
@@ -163,7 +165,8 @@ const Navbar1 = () => {
               {/* Desktop CTA Button */}
               <div className="hidden md:block">
                 <button
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-full text-white transition-all"
+                  onClick={() => setIsWaitlistOpen(true)}
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-full text-white transition-all hover:scale-105"
                   style={{
                     backgroundImage: 'linear-gradient(to right, #2563eb, #7c3aed)',
                   }}
@@ -208,7 +211,10 @@ const Navbar1 = () => {
               <a href="#" className="text-base text-white/90 font-medium" onClick={toggleMenu}></a>
               <button
                 className="inline-flex items-center justify-center w-full px-5 py-3 text-base text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 backdrop-blur-sm rounded-full transition-all duration-300"
-                onClick={toggleMenu}
+                onClick={() => {
+                  setIsWaitlistOpen(true);
+                  toggleMenu();
+                }}
               >
                 Join Waitlist
               </button>
@@ -216,6 +222,9 @@ const Navbar1 = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Waitlist Modal */}
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </>
   )
 }

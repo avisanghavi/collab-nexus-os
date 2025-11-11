@@ -67,7 +67,7 @@ const MissionControlSectionNew = () => {
               <span className="font-semibold text-gray-900">HeyJarvis</span>
             </div>
             <div>
-              <a href="#" className="hover:text-gray-900 transition-colors font-medium">Contact Us</a>
+              <a href="mailto:avi@heyjarvis.ai" className="hover:text-gray-900 transition-colors font-medium">Contact Us</a>
             </div>
           </div>
         </div>

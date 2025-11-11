@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://www.heyjarvis.ai/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

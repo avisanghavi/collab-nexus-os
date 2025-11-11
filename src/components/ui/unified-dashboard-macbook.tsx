@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
+import WaitlistModal from "../WaitlistModal";
 
 // Performance optimization: Use reduce motion preference
 const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -20,17 +21,7 @@ interface UnifiedDashboardMacbookProps {
 
 // Mobile Version Component
 const MobileVersion = ({ logos }: { logos: UnifiedDashboardMacbookProps["logos"] }) => {
-  const [email, setEmail] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setEmail("");
-      setSubmitted(false);
-    }, 3000);
-  };
+  const [isWaitlistOpen, setIsWaitlistOpen] = React.useState(false);
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
@@ -68,7 +59,7 @@ const MobileVersion = ({ logos }: { logos: UnifiedDashboardMacbookProps["logos"]
               >
                 <img
                   src={logo.src}
-                  alt={`${logo.name}`}
+                  alt={`${logo.name} integration - Connect ${logo.name} with HeyJarvis unified dashboard`}
                   className="w-full h-full object-contain"
                   loading="eager"
                 />
@@ -104,38 +95,16 @@ const MobileVersion = ({ logos }: { logos: UnifiedDashboardMacbookProps["logos"]
           {/* Decorative line */}
           <div className="w-12 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-6 rounded-full" />
 
-          {/* Form or Success Message */}
-          {submitted ? (
-            <motion.div
-              className="py-8"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
-              <div className="text-green-600 text-lg font-medium mb-2">✓ Success!</div>
-              <p className="text-gray-600 text-sm">You've been added to the waitlist. Check your email!</p>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 mb-6">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
-              />
-              <motion.button
-                type="submit"
-                className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden text-sm"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="relative z-10">Join the Waitlist</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.button>
-            </form>
-          )}
+          {/* CTA Button */}
+          <motion.button
+            onClick={() => setIsWaitlistOpen(true)}
+            className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden text-sm mb-6"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="relative z-10">Join the Waitlist</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </motion.button>
 
           {/* Social Proof */}
           <div className="flex items-center justify-center gap-2">
@@ -150,6 +119,9 @@ const MobileVersion = ({ logos }: { logos: UnifiedDashboardMacbookProps["logos"]
           </div>
         </motion.div>
       </div>
+
+      {/* Waitlist Modal */}
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </div>
   );
 };
@@ -161,6 +133,8 @@ const DesktopVersion = ({
   macbookSrc,
   containerRef,
 }: UnifiedDashboardMacbookProps & { containerRef: React.RefObject<HTMLDivElement> }) => {
+  const [isWaitlistOpen, setIsWaitlistOpen] = React.useState(false);
+
   // Scroll animation (only used on desktop)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -379,7 +353,7 @@ const DesktopVersion = ({
 
               {/* Bottom aluminum base - fixed */}
               <div 
-                className="absolute bottom-0 left-0 right-0 h-4 flex items-center justify-center"
+                className="absolute bottom-0 left-0 right-0 h-4 flex items-center justify-center relative"
                 style={{
                   background: "linear-gradient(to bottom, #B8B8B8 0%, #A8A8A8 100%)",
                   borderBottomLeftRadius: "1rem",
@@ -397,6 +371,19 @@ const DesktopVersion = ({
                     boxShadow: "inset 0 1px 1px rgba(0,0,0,0.5)",
                   }}
                 />
+                
+                {/* SOC-2 Compliant text - bottom right */}
+                <div 
+                  className="absolute bottom-1 right-4 text-[6px] font-light tracking-wide"
+                  style={{
+                    color: "#888888",
+                    textShadow: "0 0.5px 0.5px rgba(0,0,0,0.3)",
+                    fontFamily: "system-ui, -apple-system, sans-serif",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  SOC-2 COMPLIANT
+                </div>
               </div>
             </div>
           </motion.div>
@@ -480,7 +467,10 @@ const DesktopVersion = ({
                     <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
 
                     {/* CTA Button */}
-                    <button className="group relative px-10 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                    <button 
+                      onClick={() => setIsWaitlistOpen(true)}
+                      className="group relative px-10 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+                    >
                       <span className="relative z-10">Join the Waitlist</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </button>
@@ -520,41 +510,126 @@ const DesktopVersion = ({
           }}
         >
           <motion.div
-            className="relative w-32 h-32"
+            className="relative w-36 h-36"
             style={{
               transform: "translateZ(0)",
               backfaceVisibility: "hidden",
+              filter: "drop-shadow(0 0 60px rgba(96, 165, 250, 0.9))",
             }}
             animate={{
-              scale: [1, 1.1, 1],
+              scale: [1, 1.05, 1],
             }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            {/* Outer energy ring */}
+            {/* Outer glow halo */}
+            <motion.div
+              className="absolute -inset-4 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                background: "radial-gradient(circle, transparent 60%, rgba(96, 165, 250, 0.3) 70%, rgba(96, 165, 250, 0.1) 100%)",
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              initial={false}
+            />
+
+            {/* Holographic outer ring 1 */}
+            <motion.div
+              className="absolute -inset-2 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(96, 165, 250, 0.4)",
+                background: "transparent",
+              }}
+              animate={{
+                scale: [1, 1.15, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+              initial={false}
+            />
+
+            {/* Holographic outer ring 2 */}
+            <motion.div
+              className="absolute -inset-1 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(147, 197, 253, 0.5)",
+                background: "transparent",
+              }}
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.4, 0.7, 0.4],
+              }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+              initial={false}
+            />
+
+            {/* Main outer energy ring - Bright blue */}
             <motion.div
               className="absolute inset-0 rounded-full will-change-transform"
               style={{
                 transform: "translateZ(0)",
                 backfaceVisibility: "hidden",
-                border: "2px solid rgba(6, 182, 212, 0.9)",
-                boxShadow: "0 0 60px rgba(6, 182, 212, 0.9), inset 0 0 40px rgba(6, 182, 212, 0.5)",
+                border: "4px solid rgba(96, 165, 250, 1)",
+                background: "transparent",
+                boxShadow: "0 0 100px rgba(96, 165, 250, 1), 0 0 50px rgba(96, 165, 250, 0.8), inset 0 0 60px rgba(147, 197, 253, 0.4)",
               }}
               animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.7, 1, 0.7],
+                scale: [1, 1.1, 1],
+                opacity: [0.9, 1, 0.9],
               }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               initial={false}
             />
-            
-            {/* Middle rotating ring */}
+
+            {/* Concentric circle 1 */}
             <motion.div
-              className="absolute inset-3 rounded-full will-change-transform"
+              className="absolute inset-2 rounded-full will-change-transform"
               style={{
                 transform: "translateZ(0)",
                 backfaceVisibility: "hidden",
-                border: "1.5px solid rgba(59, 130, 246, 0.8)",
-                boxShadow: "0 0 40px rgba(59, 130, 246, 0.7)",
+                border: "1px solid rgba(147, 197, 253, 0.6)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.4, 0.8, 0.4],
+              }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              initial={false}
+            />
+
+            {/* Concentric circle 2 */}
+            <motion.div
+              className="absolute inset-4 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(191, 219, 254, 0.5)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.3, 0.7, 0.3],
+              }}
+              transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+              initial={false}
+            />
+            
+            {/* Middle rotating ring with segments - Light blue */}
+            <motion.div
+              className="absolute inset-6 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "3px solid rgba(147, 197, 253, 1)",
+                background: "transparent",
+                boxShadow: "0 0 70px rgba(147, 197, 253, 1), inset 0 0 40px rgba(191, 219, 254, 0.4)",
               }}
               animate={{
                 rotate: 360,
@@ -562,15 +637,48 @@ const DesktopVersion = ({
               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               initial={false}
             />
-            
-            {/* Inner counter-rotating ring */}
+
+            {/* Concentric circle 3 */}
             <motion.div
-              className="absolute inset-6 rounded-full will-change-transform"
+              className="absolute inset-8 rounded-full will-change-transform"
               style={{
                 transform: "translateZ(0)",
                 backfaceVisibility: "hidden",
-                border: "1px solid rgba(139, 92, 246, 0.9)",
-                boxShadow: "0 0 30px rgba(139, 92, 246, 0.8)",
+                border: "1px solid rgba(224, 242, 254, 0.6)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.5, 0.9, 0.5],
+              }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              initial={false}
+            />
+
+            {/* Concentric circle 4 */}
+            <motion.div
+              className="absolute inset-10 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(240, 249, 255, 0.7)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.4, 0.8, 0.4],
+              }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+              initial={false}
+            />
+            
+            {/* Inner counter-rotating ring - Bright white */}
+            <motion.div
+              className="absolute inset-12 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "3px solid rgba(255, 255, 255, 1)",
+                background: "transparent",
+                boxShadow: "0 0 50px rgba(224, 242, 254, 1), inset 0 0 30px rgba(255, 255, 255, 0.6)",
               }}
               animate={{
                 rotate: -360,
@@ -578,35 +686,182 @@ const DesktopVersion = ({
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               initial={false}
             />
-            
-            {/* Core glowing sphere */}
+
+            {/* Innermost holographic circle */}
             <motion.div
-              className="absolute inset-0 rounded-full will-change-transform"
+              className="absolute inset-[52px] rounded-full will-change-transform"
               style={{
                 transform: "translateZ(0)",
                 backfaceVisibility: "hidden",
-                background: "radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 1) 0%, rgba(6, 182, 212, 0.8) 20%, rgba(59, 130, 246, 0.5) 50%, rgba(139, 92, 246, 0.2) 100%)",
+                border: "1px solid rgba(255, 255, 255, 0.5)",
+                background: "transparent",
               }}
               animate={{
-                scale: [1, 1.15, 1],
+                opacity: [0.6, 1, 0.6],
+                scale: [1, 1.05, 1],
               }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               initial={false}
-            >
-              {/* Bright center */}
-              <motion.div
-                className="absolute inset-0 rounded-full will-change-opacity"
-                style={{
-                  background: "radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(6, 182, 212, 0.8) 30%, transparent 70%)",
-                  boxShadow: "0 0 50px rgba(6, 182, 212, 1), inset 0 0 30px rgba(255, 255, 255, 0.7)",
-                }}
-                animate={{
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                initial={false}
-              />
-            </motion.div>
+            />
+            
+            {/* Core background sphere */}
+            <motion.div
+              className="absolute inset-3 rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                background: "radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 1) 0%, rgba(240, 249, 255, 1) 20%, rgba(224, 242, 254, 0.9) 40%, rgba(191, 219, 254, 0.6) 70%, rgba(147, 197, 253, 0.3) 100%)",
+                boxShadow: "0 0 80px rgba(96, 165, 250, 1), inset 0 0 60px rgba(255, 255, 255, 0.7)",
+              }}
+              animate={{
+                scale: [1, 1.08, 1],
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 1 - White */}
+            <motion.div
+              className="absolute inset-[18%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1.5px solid rgba(255, 255, 255, 0.8)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.6, 1, 0.6],
+                rotate: 360,
+              }}
+              transition={{ 
+                opacity: { duration: 1.3, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 8, repeat: Infinity, ease: "linear" }
+              }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 2 - Light Blue */}
+            <motion.div
+              className="absolute inset-[22%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(147, 197, 253, 0.7)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.5, 0.9, 0.5],
+              }}
+              transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 3 - White */}
+            <motion.div
+              className="absolute inset-[26%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1.5px solid rgba(255, 255, 255, 0.9)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.7, 1, 0.7],
+                rotate: -360,
+              }}
+              transition={{ 
+                opacity: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 6, repeat: Infinity, ease: "linear" }
+              }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 4 - Light Blue */}
+            <motion.div
+              className="absolute inset-[30%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(191, 219, 254, 0.8)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.4, 0.8, 0.4],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 5 - White */}
+            <motion.div
+              className="absolute inset-[34%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1.5px solid rgba(255, 255, 255, 1)",
+                background: "transparent",
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)",
+              }}
+              animate={{
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 6 - Light Blue */}
+            <motion.div
+              className="absolute inset-[38%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1px solid rgba(147, 197, 253, 0.9)",
+                background: "transparent",
+              }}
+              animate={{
+                opacity: [0.5, 0.95, 0.5],
+                rotate: 360,
+              }}
+              transition={{ 
+                opacity: { duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.2 },
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" }
+              }}
+              initial={false}
+            />
+
+            {/* Inner detail circle 7 - White */}
+            <motion.div
+              className="absolute inset-[42%] rounded-full will-change-transform"
+              style={{
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                border: "1.5px solid rgba(255, 255, 255, 0.95)",
+                background: "transparent",
+                boxShadow: "0 0 15px rgba(255, 255, 255, 0.5)",
+              }}
+              animate={{
+                opacity: [0.7, 1, 0.7],
+                scale: [1, 1.08, 1],
+              }}
+              transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+              initial={false}
+            />
+
+            {/* Ultra-bright white center core */}
+            <motion.div
+              className="absolute inset-[30%] rounded-full will-change-opacity"
+              style={{
+                background: "radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 30%, rgba(240, 249, 255, 0.8) 60%, transparent 100%)",
+                boxShadow: "0 0 100px rgba(224, 242, 254, 1), 0 0 60px rgba(255, 255, 255, 1), inset 0 0 50px rgba(255, 255, 255, 1)",
+              }}
+              animate={{
+                opacity: [0.95, 1, 0.95],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              initial={false}
+            />
           </motion.div>
         </motion.div>
 
@@ -703,7 +958,7 @@ const DesktopVersion = ({
               <div className="rounded-2xl bg-white shadow-2xl transform-gpu w-16 h-16 p-3.5">
                 <img
                   src={logo.src}
-                  alt={`${logo.name} integration`}
+                  alt={`${logo.name} integration - Connect ${logo.name} with HeyJarvis unified dashboard for seamless productivity`}
                   className="w-full h-full object-contain"
                   loading="eager"
                 />
@@ -780,6 +1035,9 @@ const DesktopVersion = ({
           </h2>
         </motion.div>
       </div>
+
+      {/* Waitlist Modal */}
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </div>
   );
 };
